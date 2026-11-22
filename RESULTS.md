@@ -14,9 +14,9 @@ MAPPING ACCURACY: rules only 95.9% (47/49, known sources) -> rules + LLM not mea
 ENTITY RESOLUTION at threshold 0.84: precision 99.78% recall 96.46% (validation) ; test 99.89% / 97.20%
 NEW SOURCE ONBOARDING: by hand not measured yet -> with tool not measured yet (timed by Chaman)
 RUNTIME: 20K records 2.42 s ; 200K records 22.85 s ; quarantined rows 952 (20K) by reason: see table below
-TOTAL API SPEND: $0.00 so far ; CI passing? not run yet (workflow written, repo not pushed) ; demo video: not recorded yet
+TOTAL API SPEND: $0.00 so far ; CI passing? yes on GitHub (tests and dashboard build) ; demo video: not recorded yet
 ANYTHING THAT FAILED OR SURPRISED YOU: see "Surprises and failures" below
-REPO pushed? no
+REPO pushed? yes, https://github.com/byteKumar/data-onboarding
 ```
 
 ## 1. Mapping accuracy (rules only, no LLM, no human)
@@ -65,8 +65,10 @@ Threshold 0.84. 20,325 candidate pairs from blocking (vs ~222M for all pairs). P
 splits (3,707, all non-matches by construction) are excluded from the split rows; the model would
 wrongly link 23 of them at 0.84, which is why the all-records precision is lower.
 
-Recall is capped by blocking (about 95%): true pairs that share no email, phone suffix, ZIP+name
-prefix or domain+name prefix are never compared.
+Blocking compares only about 95% of true pairs directly (blocking recall in eval/results/er.json):
+true pairs that share no email, phone suffix, ZIP+name prefix or domain+name prefix are never
+compared. Pairwise recall (97.20% on test) is higher because union-find clustering links two records
+that each match a third record, even when that pair was never compared.
 
 ## 3. Runtime
 
