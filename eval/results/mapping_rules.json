@@ -1,0 +1,530 @@
+{
+  "measured_at": "2026-11-21T21:06:27",
+  "machine": "Apple M3, 16 GB RAM, Darwin 25.6.0, Python 3.12.16",
+  "command": "uv run python eval/mapping_eval.py --mode rules",
+  "summary": {
+    "mode": "rules",
+    "unseen": false,
+    "columns": 49,
+    "correct": 47,
+    "accuracy": 0.9592,
+    "resolved": 39,
+    "correct_when_resolved": 39,
+    "unresolved": 10,
+    "unresolved_but_truth_ignore": 8,
+    "resolved_by_store": 0,
+    "resolved_by_rules": 39,
+    "resolved_by_llm": 0,
+    "rule_proposals_rejected": 2,
+    "llm_proposals_rejected": 0,
+    "llm_usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cost_usd": 0.0
+    }
+  },
+  "columns": [
+    {
+      "table": "crm.contacts",
+      "column": "Contact ID",
+      "truth": "customer_ref",
+      "predicted": "customer_ref",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "crm.contacts",
+      "column": "Full Name",
+      "truth": "full_name",
+      "predicted": "full_name",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "crm.contacts",
+      "column": "E-mail Address",
+      "truth": "email",
+      "predicted": "email",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "crm.contacts",
+      "column": "Phone #",
+      "truth": "phone",
+      "predicted": "phone",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "crm.contacts",
+      "column": "Mailing Street",
+      "truth": "street",
+      "predicted": "street",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "crm.contacts",
+      "column": "Mailing City",
+      "truth": "city",
+      "predicted": "city",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "crm.contacts",
+      "column": "Mailing State",
+      "truth": "state",
+      "predicted": "state",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "crm.contacts",
+      "column": "Zip/Postal",
+      "truth": "postal_code",
+      "predicted": "postal_code",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "crm.contacts",
+      "column": "Account Name",
+      "truth": "company_name",
+      "predicted": "company_name",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "crm.contacts",
+      "column": "Tier",
+      "truth": "segment",
+      "predicted": "ignore",
+      "unresolved": true,
+      "method": "none",
+      "correct": false,
+      "rejected": []
+    },
+    {
+      "table": "crm.contacts",
+      "column": "Created Date",
+      "truth": "signup_date",
+      "predicted": "signup_date",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "crm.contacts",
+      "column": "Lead Source",
+      "truth": "ignore",
+      "predicted": "ignore",
+      "unresolved": true,
+      "method": "none",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "crm.contacts",
+      "column": "Owner",
+      "truth": "ignore",
+      "predicted": "ignore",
+      "unresolved": true,
+      "method": "none",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "crm.contacts",
+      "column": "Last Activity",
+      "truth": "ignore",
+      "predicted": "ignore",
+      "unresolved": true,
+      "method": "none",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "billing.accounts",
+      "column": "cust_no",
+      "truth": "customer_ref",
+      "predicted": "customer_ref",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "billing.accounts",
+      "column": "acct_id",
+      "truth": "account_ref",
+      "predicted": "account_ref",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "billing.accounts",
+      "column": "bill_to_name",
+      "truth": "full_name",
+      "predicted": "full_name",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "billing.accounts",
+      "column": "billing_email",
+      "truth": "email",
+      "predicted": "email",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "billing.accounts",
+      "column": "tel",
+      "truth": "phone",
+      "predicted": "phone",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "billing.accounts",
+      "column": "addr_line1",
+      "truth": "street",
+      "predicted": "street",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "billing.accounts",
+      "column": "town",
+      "truth": "city",
+      "predicted": "city",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "billing.accounts",
+      "column": "region",
+      "truth": "state",
+      "predicted": "state",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "billing.accounts",
+      "column": "zip",
+      "truth": "postal_code",
+      "predicted": "postal_code",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "billing.accounts",
+      "column": "company",
+      "truth": "company_name",
+      "predicted": "company_name",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "billing.accounts",
+      "column": "plan_code",
+      "truth": "plan",
+      "predicted": "plan",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "billing.accounts",
+      "column": "opened",
+      "truth": "signup_date",
+      "predicted": "signup_date",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "billing.accounts",
+      "column": "currency_pref",
+      "truth": "ignore",
+      "predicted": "ignore",
+      "unresolved": true,
+      "method": "none",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "billing.invoices",
+      "column": "Inv #",
+      "truth": "invoice_ref",
+      "predicted": "invoice_ref",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "billing.invoices",
+      "column": "acct_id",
+      "truth": "account_ref",
+      "predicted": "account_ref",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "billing.invoices",
+      "column": "Inv Date",
+      "truth": "invoice_date",
+      "predicted": "invoice_date",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "billing.invoices",
+      "column": "Due",
+      "truth": "due_date",
+      "predicted": "due_date",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "billing.invoices",
+      "column": "Amt",
+      "truth": "amount",
+      "predicted": "amount",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "billing.invoices",
+      "column": "CCY",
+      "truth": "currency",
+      "predicted": "currency",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "billing.invoices",
+      "column": "Status",
+      "truth": "invoice_status",
+      "predicted": "invoice_status",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "billing.invoices",
+      "column": "memo",
+      "truth": "ignore",
+      "predicted": "ignore",
+      "unresolved": true,
+      "method": "none",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "support.tickets",
+      "column": "id",
+      "truth": "ticket_ref",
+      "predicted": "ticket_ref",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "support.tickets",
+      "column": "created_at",
+      "truth": "ticket_created_at",
+      "predicted": "ticket_created_at",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "support.tickets",
+      "column": "status",
+      "truth": "ticket_status",
+      "predicted": "ticket_status",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "support.tickets",
+      "column": "priority",
+      "truth": "priority",
+      "predicted": "priority",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "support.tickets",
+      "column": "subject",
+      "truth": "subject",
+      "predicted": "ignore",
+      "unresolved": true,
+      "method": "none",
+      "correct": false,
+      "rejected": [
+        {
+          "target": "subject",
+          "method": "rule:synonym",
+          "reason": "pattern mismatch: values look like category (100%), 'subject' expects text"
+        }
+      ]
+    },
+    {
+      "table": "support.tickets",
+      "column": "tags",
+      "truth": "ignore",
+      "predicted": "ignore",
+      "unresolved": true,
+      "method": "none",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "support.tickets",
+      "column": "requester.id",
+      "truth": "customer_ref",
+      "predicted": "customer_ref",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "support.tickets",
+      "column": "requester.name",
+      "truth": "full_name",
+      "predicted": "full_name",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "support.tickets",
+      "column": "requester.email",
+      "truth": "email",
+      "predicted": "email",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "support.tickets",
+      "column": "requester.phone",
+      "truth": "phone",
+      "predicted": "phone",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "support.tickets",
+      "column": "organization.name",
+      "truth": "company_name",
+      "predicted": "company_name",
+      "unresolved": false,
+      "method": "rule:synonym",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "support.tickets",
+      "column": "via.channel",
+      "truth": "ignore",
+      "predicted": "ignore",
+      "unresolved": true,
+      "method": "none",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "support.tickets",
+      "column": "assignee.name",
+      "truth": "ignore",
+      "predicted": "ignore",
+      "unresolved": true,
+      "method": "none",
+      "correct": true,
+      "rejected": [
+        {
+          "target": "full_name",
+          "method": "rule:token",
+          "reason": "conflict: 'requester.name' is a stronger match"
+        }
+      ]
+    },
+    {
+      "table": "support.tickets",
+      "column": "satisfaction_rating.score",
+      "truth": "csat_score",
+      "predicted": "csat_score",
+      "unresolved": false,
+      "method": "rule:token",
+      "correct": true,
+      "rejected": []
+    }
+  ]
+}
