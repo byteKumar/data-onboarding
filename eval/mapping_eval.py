@@ -2,6 +2,8 @@
 
     uv run python eval/mapping_eval.py --mode rules              # free, deterministic
     uv run python eval/mapping_eval.py --mode rules --unseen     # the 4th source, vs generator truth
+    LLM_PROVIDER=anthropic uv run python eval/mapping_eval.py --mode llm            # prints estimate only
+    LLM_PROVIDER=anthropic uv run python eval/mapping_eval.py --mode llm --yes      # PAID: rules + LLM
 
 A column counts as correct when the final target (unresolved = 'ignore') equals the truth.
 """
@@ -53,15 +55,38 @@ def run(mode: str, unseen: bool, llm=None) -> dict:
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--mode", choices=["rules"], default="rules")
+    ap.add_argument("--mode", choices=["rules", "llm"], default="rules")
     ap.add_argument("--unseen", action="store_true")
+    ap.add_argument("--yes", action="store_true", help="allow the paid LLM call")
     args = ap.parse_args(argv)
-    out = run(args.mode, args.unseen)
+    llm = None
+    suffix = ""
+    if args.mode == "llm":
+        from onboard.config import llm_provider
+        from onboard.mapping.llm import get_llm
+        from onboard.service import Workspace
+
+        provider = llm_provider()
+        if provider == "none":
+            print("Set LLM_PROVIDER=anthropic (paid) or fake (offline, NOT a real measurement).")
+            return 2
+        if provider == "anthropic":
+            manifest = ROOT / ("eval/unseen_source.yaml" if args.unseen else "sources.yaml")
+            w = Workspace(manifest=manifest)
+            est = sum(w.llm_estimate(sp)["cost_usd"] for sp in w.specs())
+            print(f"ESTIMATE: ~${est:.5f} for this eval run")
+            if not args.yes:
+                print("No paid call made. Re-run with --yes.")
+                return 3
+        else:
+            suffix = "_fake"  # never report fake numbers as LLM accuracy
+        llm = get_llm(provider, allow_paid=args.yes)
+    out = run(args.mode, args.unseen, llm=llm)
     for r in out["columns"]:
         flag = "OK " if r["correct"] else "BAD"
         print(f"{flag} {r['table']:18} {r['column']:28} truth={r['truth']:18} got={r['predicted']:18} {r['method']}")
     print(out["summary"])
-    name = f"mapping_{args.mode}{'_unseen' if args.unseen else ''}"
+    name = f"mapping_{args.mode}{suffix}{'_unseen' if args.unseen else ''}"
     print("saved", save(name, {"command": "uv run python " + " ".join(sys.argv), **out}))
     return 0
 
