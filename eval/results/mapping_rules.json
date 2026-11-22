@@ -1,5 +1,5 @@
 {
-  "measured_at": "2026-11-21T21:06:27",
+  "measured_at": "2026-11-21T21:18:00",
   "machine": "Apple M3, 16 GB RAM, Darwin 25.6.0, Python 3.12.16",
   "command": "uv run python eval/mapping_eval.py --mode rules",
   "summary": {

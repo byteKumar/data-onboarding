@@ -75,3 +75,9 @@ def llm_provider() -> str:
 
 def llm_model() -> str:
     return os.environ.get("LLM_MODEL", DEFAULT_LLM_MODEL)
+
+
+# Fallback segment for customers with no CRM record, from their billing plan.
+# ASSUMPTION to confirm with the customer's finance team; used only when CRM has no segment,
+# and the golden record says so in segment_source='plan_rule'.
+PLAN_SEGMENT = {"ENT": "Enterprise", "ENT-XL": "Enterprise", "PRO": "Mid-Market", "BAS": "SMB", "STARTER": "SMB"}

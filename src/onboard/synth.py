@@ -6,7 +6,8 @@ Three sources describe the same ~10K "true" customers in different ways:
 * Billing           -> Excel .xlsx (data/raw/billing.xlsx, sheets Accounts + Invoices)
 * Support tickets   -> JSON served by a mock API (data/raw/support_tickets.json)
 
-Messiness injected on purpose: typos, nicknames, "Last, First" names, different ID
+Messiness injected on purpose: households (different people sharing an address, last
+name and often a phone: hard negatives for entity resolution), typos, nicknames, "Last, First" names, different ID
 formats, renamed columns, mixed date formats, three currencies with locale
 formatting, missing values, ZIP codes that lost their leading zero in Excel,
 cross-system and within-system duplicates, and a few rows that must be quarantined.
@@ -237,6 +238,26 @@ def _make_entities(g: Gen, n: int) -> list[Entity]:
             street_name=g.pick(STREET_NAMES), suffix=g.pick(SUFFIXES), city=city, state=state,
             zip=zip3 + f"{int(g.rng.integers(0, 100)):02d}", company=company, segment=segment, signup=signup,
             troubled=g.r() < 0.08,
+        ))
+    # Households: a second, different person at the same address, same last name, often the same
+    # landline. These are the hard negatives an entity resolver must NOT merge.
+    for j in range(int(n * 0.04)):
+        base = ents[int(g.rng.integers(n))]
+        first = g.pick([f for f in FIRST if f != base.first])
+        domain = g.pick(FREE_DOMAINS, p=FREE_P)
+        email = f"{first.lower()}.{base.last.lower()}{int(g.rng.integers(1, 99))}@{domain}"
+        while email in used_emails:
+            email = f"{first.lower()}{int(g.rng.integers(100, 999))}@{domain}"
+        used_emails.add(email)
+        company = f"{g.pick(CO_A)} {g.pick(CO_B)}"
+        phone = base.phone if g.r() < 0.5 else base.phone[:3] + str(int(g.rng.integers(2, 10))) + \
+            f"{int(g.rng.integers(0, 1_000_000)):06d}"
+        ents.append(Entity(
+            eid=f"H{j:07d}", first=first, middle="", last=base.last, email=email, alt_email="", phone=phone,
+            alt_phone="", street_no=base.street_no, street_name=base.street_name, suffix=base.suffix,
+            city=base.city, state=base.state, zip=base.zip, company=company,
+            segment=g.pick(SEGMENTS, p=[0.15, 0.3, 0.55]),
+            signup=date(2019, 1, 1) + timedelta(days=int(g.rng.integers(0, 365 * 6 - 200))), troubled=g.r() < 0.08,
         ))
     return ents
 

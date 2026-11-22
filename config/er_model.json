@@ -1,0 +1,37 @@
+{
+  "kind": "logreg",
+  "features": [
+    "name_sim",
+    "email_sim",
+    "email_missing",
+    "phone_eq",
+    "phone_missing",
+    "street_sim",
+    "street_missing",
+    "zip_eq",
+    "zip_missing",
+    "company_sim",
+    "company_missing"
+  ],
+  "coef": [
+    11.931077,
+    7.972553,
+    5.822987,
+    3.471574,
+    1.694729,
+    1.32348,
+    1.34436,
+    2.963526,
+    1.461419,
+    7.154574,
+    5.201653
+  ],
+  "intercept": -26.248178,
+  "threshold": 0.84,
+  "trained": {
+    "at": "2026-11-21T21:18:09",
+    "train_pairs": 10680,
+    "tuned_on": "validation",
+    "selection": "max pairwise F1 after clustering"
+  }
+}

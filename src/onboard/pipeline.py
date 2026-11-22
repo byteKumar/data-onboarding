@@ -75,6 +75,9 @@ def run(settings: Settings | None = None, manifest: Path | None = None, db_path:
         t = time.perf_counter()
         er_out = resolve(tables["customer_records"], s.er_model_path, run_id)
         tables.update(er_out.tables)
+        link = tables["customer_records"][["record_id", "customer_id"]]
+        tables["accounts"] = tables["accounts"].merge(link, on="record_id", how="left")
+        tables["tickets"] = tables["tickets"].merge(link, on="record_id", how="left")
         er_stats = er_out.stats
         timings["entity_resolution"] = time.perf_counter() - t
 
@@ -90,10 +93,6 @@ def run(settings: Settings | None = None, manifest: Path | None = None, db_path:
                 _write(con, name, df)
         _write(con, "quarantine", quarantine)
         _write(con, "dq_summary", dq)
-        if run_er:
-            from onboard.analytics import create_views
-
-            create_views(con)
     timings["write_duckdb"] = time.perf_counter() - t
     timings["total"] = time.perf_counter() - t_all
 
