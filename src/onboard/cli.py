@@ -106,6 +106,19 @@ def cmd_mappings(args) -> int:
     return 0
 
 
+def cmd_run(args) -> int:
+    from onboard.pipeline import MappingNotConfirmed, run
+
+    try:
+        summary = run(manifest=Path(args.manifest) if args.manifest else None,
+                      db_path=Path(args.db) if args.db else None, run_er=not args.no_er)
+    except MappingNotConfirmed as e:
+        print(f"STOPPED: {e}")
+        return 4
+    print(json.dumps(summary, indent=2, default=str))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(prog="onboard")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -130,6 +143,11 @@ def build_parser() -> argparse.ArgumentParser:
     ac.add_argument("--table", default=None)
     ac.add_argument("--by", default="cli")
     ac.set_defaults(fn=cmd_accept)
+    r = sub.add_parser("run", help="run the pipeline into DuckDB using confirmed mappings")
+    r.add_argument("--manifest", default=None)
+    r.add_argument("--db", default=None)
+    r.add_argument("--no-er", action="store_true", help="skip entity resolution")
+    r.set_defaults(fn=cmd_run)
     mp = sub.add_parser("mappings", help="list confirmed mappings")
     mp.set_defaults(fn=cmd_mappings)
     return ap

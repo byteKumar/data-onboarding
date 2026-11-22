@@ -25,3 +25,15 @@ def small_project(tmp_path_factory) -> Path:
     shutil.copy(ROOT / "sources.yaml", root / "sources.yaml")
     (root / "config").mkdir()
     return root
+
+
+@pytest.fixture(scope="session")
+def confirmed_project(small_project) -> Path:
+    """small_project with every table's mapping confirmed (simulated human, from ground truth)."""
+    import sys
+
+    sys.path.insert(0, str(ROOT / "eval"))
+    from seed_confirmed_mappings import seed
+
+    seed(small_project, small_project / "sources.yaml", small_project / "data" / "ground_truth")
+    return small_project
