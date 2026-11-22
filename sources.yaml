@@ -1,0 +1,28 @@
+# What the customer handed over. One entry per system; one table per export.
+# `entity` is the one fact a human states up front: what kind of rows this table holds.
+sources:
+  - name: crm
+    kind: csv
+    tables:
+      - name: contacts
+        path: data/raw/crm_contacts.csv
+        entity: customer
+  - name: billing
+    kind: excel
+    tables:
+      - name: accounts
+        path: data/raw/billing.xlsx
+        sheet: Accounts
+        entity: account
+      - name: invoices
+        path: data/raw/billing.xlsx
+        sheet: Invoices
+        entity: invoice
+  - name: support
+    kind: json_api
+    tables:
+      - name: tickets
+        url: inproc            # or http://localhost:8003/mock/support when the API is running
+        endpoint: /tickets
+        path: data/raw/support_tickets.json   # only used by the in-process mock
+        entity: ticket
