@@ -43,3 +43,23 @@ def test_confirm_rejects_impossible_then_saves(client):
 
 def test_mock_support_api_mounted(client):
     assert client.get("/api/health").json() == {"ok": True}
+
+
+def test_metrics_endpoints(confirmed_project, tmp_path):
+    from onboard.pipeline import run
+
+    s = Settings(root=confirmed_project)
+    run(settings=s)
+    api.set_workspace(Workspace(settings=s))
+    c = TestClient(api.app)
+    ov = c.get("/api/metrics/overview").json()
+    assert ov["counts"]["customers"] <= ov["counts"]["customer_records"]
+    seg = c.get("/api/metrics/revenue_by_segment").json()
+    assert all(r["paid_usd"] <= r["billed_usd"] + 0.01 for r in seg)
+    risk = c.get("/api/metrics/at_risk").json()
+    assert len(risk["rules"]) == 4
+    assert all(a["rules_fired"] >= risk["min_rules"] for a in risk["accounts"])
+    dq = c.get("/api/metrics/data_quality").json()
+    assert dq["entity_resolution"]["records"] >= dq["entity_resolution"]["customers"]
+    assert c.get("/api/metrics/open_tickets").status_code == 200
+    api.set_workspace(None)

@@ -93,6 +93,10 @@ def run(settings: Settings | None = None, manifest: Path | None = None, db_path:
                 _write(con, name, df)
         _write(con, "quarantine", quarantine)
         _write(con, "dq_summary", dq)
+        if run_er:
+            from onboard.analytics import create_views
+
+            create_views(con)
     timings["write_duckdb"] = time.perf_counter() - t
     timings["total"] = time.perf_counter() - t_all
 

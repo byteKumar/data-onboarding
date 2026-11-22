@@ -77,7 +77,7 @@ export default function MappingPage() {
     } else {
       const det = res.body.detail ?? {};
       const rej: Record<string, string> = {};
-      for (const r of det.rejected ?? []) rej[r.column] = r.reason;
+      for (const r of det.rejected ?? []) rej[r.column] = rej[r.column] ? `${rej[r.column]}; ${r.reason}` : r.reason;
       setServerRejections(rej);
       setMessage(`Not saved: ${Object.keys(rej).length} mapping(s) rejected by validators.`);
     }
@@ -95,8 +95,9 @@ export default function MappingPage() {
               <strong>{t.key}</strong>
               <span className={t.confirmed ? "pill ok" : "pill warn"}>{t.confirmed ? "confirmed" : "review"}</span>
               <small>
-                {t.entity} · rules {t.stats.resolved_by_rules} · LLM {t.stats.resolved_by_llm} · open{" "}
-                {t.stats.unresolved}
+                {t.stats.resolved_by_store === t.stats.columns
+                  ? `${t.entity} · ${t.stats.columns} columns from the stored mapping`
+                  : `${t.entity} · rules ${t.stats.resolved_by_rules} · LLM ${t.stats.resolved_by_llm} · open ${t.stats.unresolved}`}
               </small>
             </li>
           ))}
