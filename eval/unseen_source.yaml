@@ -1,0 +1,9 @@
+# The 4th, unseen source used for the onboarding-time test (see eval/ONBOARDING_TIMING.md).
+# Not in sources.yaml on purpose. To onboard it for real, copy this block into sources.yaml.
+sources:
+  - name: erp
+    kind: csv
+    tables:
+      - name: customer_master
+        path: data/unseen/erp_customer_master.csv
+        entity: customer

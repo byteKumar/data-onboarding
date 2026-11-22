@@ -1,0 +1,213 @@
+{
+  "measured_at": "2026-11-21T21:25:54",
+  "machine": "Apple M3, 16 GB RAM, macOS 26.6.2, Python 3.12.16",
+  "command": "uv run python scripts/benchmark.py --scales 1 10",
+  "runs": [
+    {
+      "scale": 1.0,
+      "seed": 42,
+      "customer_records_generated": 21209,
+      "invoices_generated": 39365,
+      "tickets_generated": 12445,
+      "generate_s": 3.96,
+      "pipeline_wall_s": 2.44,
+      "pipeline": {
+        "run_id": "20261121T212445-251158",
+        "db": "/Users/chamankumar/Projects/data-onboarding/data/bench/scale_1/data/bench.duckdb",
+        "rows_in": {
+          "crm.contacts": 8939,
+          "billing.accounts": 6610,
+          "billing.invoices": 39365,
+          "support.tickets": 12445
+        },
+        "rows_out": {
+          "customer_records": 21108,
+          "accounts": 6610,
+          "invoices": 38661,
+          "tickets": 12279,
+          "customers": 10613,
+          "merge_history": 10495
+        },
+        "quarantined": 952,
+        "quarantined_by_check": {
+          "duplicate_key": 67,
+          "invalid": 113,
+          "missing_required": 305,
+          "out_of_range": 252,
+          "referential": 215
+        },
+        "er": {
+          "model": "logreg",
+          "threshold": 0.84,
+          "records": 21108,
+          "blocks_skipped_over_100:email": 0,
+          "blocks_skipped_over_100:phone7": 0,
+          "blocks_skipped_over_100:zip+last3": 0,
+          "blocks_skipped_over_100:domain+name": 0,
+          "candidate_pairs": 20325,
+          "customers": 10613,
+          "links": 10495
+        },
+        "timings_s": {
+          "load:crm.contacts": 0.012,
+          "normalize:crm.contacts": 0.09,
+          "load:billing.accounts": 0.079,
+          "normalize:billing.accounts": 0.065,
+          "load:billing.invoices": 0.284,
+          "normalize:billing.invoices": 0.365,
+          "load:support.tickets": 0.661,
+          "normalize:support.tickets": 0.104,
+          "checks+model": 0.074,
+          "entity_resolution": 0.479,
+          "write_duckdb": 0.172,
+          "total": 2.416
+        }
+      },
+      "quarantine_by_reason": [
+        {
+          "check": "referential",
+          "detail": "account_ref not found in any accounts table",
+          "rows": 215
+        },
+        {
+          "check": "missing_required",
+          "detail": "amount is empty or unparseable",
+          "rows": 188
+        },
+        {
+          "check": "out_of_range",
+          "detail": "csat_score must be 1..5",
+          "rows": 131
+        },
+        {
+          "check": "out_of_range",
+          "detail": "amount must be > 0 and <= 1,000,000 USD",
+          "rows": 121
+        },
+        {
+          "check": "invalid",
+          "detail": "due_date before invoice_date",
+          "rows": 113
+        },
+        {
+          "check": "missing_required",
+          "detail": "neither name nor email",
+          "rows": 82
+        },
+        {
+          "check": "duplicate_key",
+          "detail": "invoice_ref seen earlier",
+          "rows": 67
+        },
+        {
+          "check": "missing_required",
+          "detail": "ticket_created_at is empty or unparseable",
+          "rows": 35
+        }
+      ]
+    },
+    {
+      "scale": 10.0,
+      "seed": 42,
+      "customer_records_generated": 211364,
+      "invoices_generated": 393557,
+      "tickets_generated": 126116,
+      "generate_s": 43.44,
+      "pipeline_wall_s": 23.03,
+      "pipeline": {
+        "run_id": "20261121T212531-19e2a1",
+        "db": "/Users/chamankumar/Projects/data-onboarding/data/bench/scale_10/data/bench.duckdb",
+        "rows_in": {
+          "crm.contacts": 89008,
+          "billing.accounts": 66093,
+          "billing.invoices": 393557,
+          "support.tickets": 126116
+        },
+        "rows_out": {
+          "customer_records": 210211,
+          "accounts": 66093,
+          "invoices": 386658,
+          "tickets": 124459,
+          "customers": 104509,
+          "merge_history": 105702
+        },
+        "quarantined": 9453,
+        "quarantined_by_check": {
+          "duplicate_key": 855,
+          "invalid": 1146,
+          "missing_required": 3233,
+          "out_of_range": 2420,
+          "referential": 1799
+        },
+        "er": {
+          "model": "logreg",
+          "threshold": 0.84,
+          "records": 210211,
+          "blocks_skipped_over_100:email": 0,
+          "blocks_skipped_over_100:phone7": 0,
+          "blocks_skipped_over_100:zip+last3": 0,
+          "blocks_skipped_over_100:domain+name": 1,
+          "candidate_pairs": 711854,
+          "customers": 104509,
+          "links": 105702
+        },
+        "timings_s": {
+          "load:crm.contacts": 0.149,
+          "normalize:crm.contacts": 0.853,
+          "load:billing.accounts": 1.437,
+          "normalize:billing.accounts": 0.611,
+          "load:billing.invoices": 2.922,
+          "normalize:billing.invoices": 3.856,
+          "load:support.tickets": 2.456,
+          "normalize:support.tickets": 1.032,
+          "checks+model": 0.875,
+          "entity_resolution": 7.664,
+          "write_duckdb": 0.99,
+          "total": 22.848
+        }
+      },
+      "quarantine_by_reason": [
+        {
+          "check": "missing_required",
+          "detail": "amount is empty or unparseable",
+          "rows": 1940
+        },
+        {
+          "check": "referential",
+          "detail": "account_ref not found in any accounts table",
+          "rows": 1799
+        },
+        {
+          "check": "out_of_range",
+          "detail": "csat_score must be 1..5",
+          "rows": 1261
+        },
+        {
+          "check": "out_of_range",
+          "detail": "amount must be > 0 and <= 1,000,000 USD",
+          "rows": 1159
+        },
+        {
+          "check": "invalid",
+          "detail": "due_date before invoice_date",
+          "rows": 1146
+        },
+        {
+          "check": "missing_required",
+          "detail": "neither name nor email",
+          "rows": 897
+        },
+        {
+          "check": "duplicate_key",
+          "detail": "invoice_ref seen earlier",
+          "rows": 855
+        },
+        {
+          "check": "missing_required",
+          "detail": "ticket_created_at is empty or unparseable",
+          "rows": 396
+        }
+      ]
+    }
+  ]
+}

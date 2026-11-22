@@ -1,0 +1,197 @@
+{
+  "measured_at": "2026-11-21T21:23:31",
+  "machine": "Apple M3, 16 GB RAM, Darwin 25.6.0, Python 3.12.16",
+  "command": "uv run python eval/mapping_eval.py --mode rules --unseen",
+  "summary": {
+    "mode": "rules",
+    "unseen": true,
+    "columns": 15,
+    "correct": 5,
+    "accuracy": 0.3333,
+    "resolved": 3,
+    "correct_when_resolved": 2,
+    "unresolved": 12,
+    "unresolved_but_truth_ignore": 3,
+    "resolved_by_store": 0,
+    "resolved_by_rules": 3,
+    "resolved_by_llm": 0,
+    "rule_proposals_rejected": 3,
+    "llm_proposals_rejected": 0,
+    "llm_usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cost_usd": 0.0
+    },
+    "truth": "generator ground truth"
+  },
+  "columns": [
+    {
+      "table": "erp.customer_master",
+      "column": "KUNNR",
+      "truth": "customer_ref",
+      "predicted": "phone",
+      "unresolved": false,
+      "method": "rule:pattern",
+      "correct": false,
+      "rejected": []
+    },
+    {
+      "table": "erp.customer_master",
+      "column": "NAME1",
+      "truth": "full_name",
+      "predicted": "full_name",
+      "unresolved": false,
+      "method": "rule:token",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "erp.customer_master",
+      "column": "NAME2",
+      "truth": "company_name",
+      "predicted": "ignore",
+      "unresolved": true,
+      "method": "none",
+      "correct": false,
+      "rejected": [
+        {
+          "target": "full_name",
+          "method": "rule:token",
+          "reason": "conflict: 'NAME1' is a stronger match"
+        }
+      ]
+    },
+    {
+      "table": "erp.customer_master",
+      "column": "STRAS",
+      "truth": "street",
+      "predicted": "ignore",
+      "unresolved": true,
+      "method": "none",
+      "correct": false,
+      "rejected": []
+    },
+    {
+      "table": "erp.customer_master",
+      "column": "ORT01",
+      "truth": "city",
+      "predicted": "ignore",
+      "unresolved": true,
+      "method": "none",
+      "correct": false,
+      "rejected": []
+    },
+    {
+      "table": "erp.customer_master",
+      "column": "REGIO",
+      "truth": "state",
+      "predicted": "ignore",
+      "unresolved": true,
+      "method": "none",
+      "correct": false,
+      "rejected": []
+    },
+    {
+      "table": "erp.customer_master",
+      "column": "PSTLZ",
+      "truth": "postal_code",
+      "predicted": "ignore",
+      "unresolved": true,
+      "method": "none",
+      "correct": false,
+      "rejected": []
+    },
+    {
+      "table": "erp.customer_master",
+      "column": "LAND1",
+      "truth": "country",
+      "predicted": "ignore",
+      "unresolved": true,
+      "method": "none",
+      "correct": false,
+      "rejected": []
+    },
+    {
+      "table": "erp.customer_master",
+      "column": "TELF1",
+      "truth": "phone",
+      "predicted": "ignore",
+      "unresolved": true,
+      "method": "none",
+      "correct": false,
+      "rejected": [
+        {
+          "target": "phone",
+          "method": "rule:pattern",
+          "reason": "conflict: 'KUNNR' is a stronger match"
+        }
+      ]
+    },
+    {
+      "table": "erp.customer_master",
+      "column": "SMTP_ADDR",
+      "truth": "email",
+      "predicted": "email",
+      "unresolved": false,
+      "method": "rule:pattern",
+      "correct": true,
+      "rejected": [
+        {
+          "target": "street",
+          "method": "rule:token",
+          "reason": "pattern mismatch: values look like email (100%), 'street' expects text"
+        }
+      ]
+    },
+    {
+      "table": "erp.customer_master",
+      "column": "ERDAT",
+      "truth": "signup_date",
+      "predicted": "ignore",
+      "unresolved": true,
+      "method": "none",
+      "correct": false,
+      "rejected": []
+    },
+    {
+      "table": "erp.customer_master",
+      "column": "KDGRP",
+      "truth": "segment",
+      "predicted": "ignore",
+      "unresolved": true,
+      "method": "none",
+      "correct": false,
+      "rejected": []
+    },
+    {
+      "table": "erp.customer_master",
+      "column": "KTOKD",
+      "truth": "ignore",
+      "predicted": "ignore",
+      "unresolved": true,
+      "method": "none",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "erp.customer_master",
+      "column": "BRSCH",
+      "truth": "ignore",
+      "predicted": "ignore",
+      "unresolved": true,
+      "method": "none",
+      "correct": true,
+      "rejected": []
+    },
+    {
+      "table": "erp.customer_master",
+      "column": "SPERR",
+      "truth": "ignore",
+      "predicted": "ignore",
+      "unresolved": true,
+      "method": "none",
+      "correct": true,
+      "rejected": []
+    }
+  ]
+}

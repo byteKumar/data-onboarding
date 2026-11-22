@@ -1,0 +1,8 @@
+# Public ticket dataset fetched by scripts/fetch_public_tickets.py (optional, not in sources.yaml).
+sources:
+  - name: public
+    kind: csv
+    tables:
+      - name: tickets
+        path: data/public/support_tickets_public.csv
+        entity: ticket

@@ -519,11 +519,60 @@ def _support(g: Gen, ents: list[Entity]):
     return [tickets[i] for i in order], truth
 
 
+# The unseen 4th source: an ERP customer master with SAP-style column names. Kept out of
+# sources.yaml and with its own ground truth dir, for the onboarding-time test.
+ERP_MAP = {
+    "KUNNR": "customer_ref", "NAME1": "full_name", "NAME2": "company_name", "STRAS": "street", "ORT01": "city",
+    "REGIO": "state", "PSTLZ": "postal_code", "LAND1": "country", "TELF1": "phone", "SMTP_ADDR": "email",
+    "ERDAT": "signup_date", "KDGRP": "segment", "KTOKD": "ignore", "BRSCH": "ignore", "SPERR": "ignore",
+}
+
+
+def _erp(g: Gen, ents: list[Entity]):
+    rows, truth = [], []
+    chosen = [e for e in ents if g.r() < 0.30]
+    nums = g.rng.permutation(len(chosen) * 4)[: len(chosen)] + 10_000
+    for e, num in zip(chosen, nums, strict=True):
+        kunnr = f"{int(num):010d}"
+        phone = messy_phone(g, e, 0.2, preferred=1)
+        rows.append({
+            "KUNNR": kunnr,
+            "NAME1": messy_name(g, e, upper_p=0.5),
+            "NAME2": e.company if g.r() > 0.1 else None,
+            "STRAS": messy_street(g, e, abbrev_p=0.9),
+            "ORT01": e.city.upper(),
+            "REGIO": e.state,
+            "PSTLZ": e.zip,
+            "LAND1": "US",
+            "TELF1": ("+1-" + phone.replace(" ", "-").replace(".", "-").lstrip("+1-")) if phone else None,
+            "SMTP_ADDR": messy_email(g, e, missing_p=0.08),
+            "ERDAT": e.signup.strftime("%Y%m%d"),
+            "KDGRP": {"Enterprise": "ENT", "Mid-Market": "MM", "SMB": "SMB"}[e.segment],
+            "KTOKD": g.pick(["Z001", "Z002", "ZCPD"]),
+            "BRSCH": g.pick(["IT01", "RETL", "HLTH", "MANU", "FINS"]),
+            "SPERR": "X" if g.r() < 0.03 else None,
+        })
+        truth.append((f"erp.customer_master:{kunnr}", e.eid))
+    return pd.DataFrame(rows), truth
+
+
+def generate_unseen(out_dir: Path, ents: list[Entity], seed: int) -> dict:
+    g = Gen(seed + 7919)  # own RNG stream: adding this source does not change the other three
+    df, truth = _erp(g, ents)
+    (out_dir / "unseen").mkdir(parents=True, exist_ok=True)
+    gt = out_dir / "ground_truth_unseen"
+    gt.mkdir(parents=True, exist_ok=True)
+    df.to_csv(out_dir / "unseen" / "erp_customer_master.csv", index=False)
+    pd.DataFrame(_mapping_rows("erp", "customer_master", ERP_MAP)).to_csv(gt / "column_mapping.csv", index=False)
+    pd.DataFrame(truth, columns=["record_id", "true_customer_id"]).to_csv(gt / "clusters.csv", index=False)
+    return {"erp.customer_master": len(df)}
+
+
 def _mapping_rows(source: str, table: str, m: dict[str, str]):
     return [{"source": source, "table": table, "column": c, "target_field": t} for c, t in m.items()]
 
 
-def generate(out_dir: Path, scale: float = 1.0, seed: int = 42) -> dict:
+def generate(out_dir: Path, scale: float = 1.0, seed: int = 42, unseen: bool = True) -> dict:
     """Write the three raw sources plus hidden ground truth. Returns a summary dict."""
     out_dir = Path(out_dir)
     raw = out_dir / "raw"
@@ -555,5 +604,7 @@ def generate(out_dir: Path, scale: float = 1.0, seed: int = 42) -> dict:
         "invoices": len(invoices), "tickets": len(tickets),
         "true_customers_present": int(clusters["true_customer_id"].nunique()),
     }
+    if unseen:
+        summary["unseen_source"] = generate_unseen(out_dir, ents, seed)
     (gt / "summary.json").write_text(json.dumps(summary, indent=2))
     return summary

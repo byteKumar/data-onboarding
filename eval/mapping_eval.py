@@ -2,6 +2,7 @@
 
     uv run python eval/mapping_eval.py --mode rules              # free, deterministic
     uv run python eval/mapping_eval.py --mode rules --unseen     # the 4th source, vs generator truth
+    uv run python eval/mapping_eval.py --mode rules --unseen --truth eval/hand_labeled_unseen_mapping.csv
     LLM_PROVIDER=anthropic uv run python eval/mapping_eval.py --mode llm            # prints estimate only
     LLM_PROVIDER=anthropic uv run python eval/mapping_eval.py --mode llm --yes      # PAID: rules + LLM
 
@@ -12,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from pathlib import Path
 
 from eval_common import ROOT, save, truth_mapping
 
@@ -20,10 +22,10 @@ from onboard.mapping.engine import suggest
 from onboard.profiling import profile_table
 
 
-def run(mode: str, unseen: bool, llm=None) -> dict:
+def run(mode: str, unseen: bool, llm=None, truth_csv: Path | None = None) -> dict:
     manifest = ROOT / ("eval/unseen_source.yaml" if unseen else "sources.yaml")
     gt_dir = ROOT / "data" / ("ground_truth_unseen" if unseen else "ground_truth")
-    truth = truth_mapping(gt_dir)
+    truth = truth_mapping(gt_dir, truth_csv)
     rows, usage_total = [], {"input_tokens": 0, "output_tokens": 0, "cost_usd": 0.0}
     stats_total: dict[str, int] = {}
     for spec in load_manifest(manifest):
@@ -58,6 +60,7 @@ def main(argv=None) -> int:
     ap.add_argument("--mode", choices=["rules", "llm"], default="rules")
     ap.add_argument("--unseen", action="store_true")
     ap.add_argument("--yes", action="store_true", help="allow the paid LLM call")
+    ap.add_argument("--truth", default=None, help="mapping CSV to score against, e.g. Chaman's hand-labeled file")
     args = ap.parse_args(argv)
     llm = None
     suffix = ""
@@ -81,12 +84,13 @@ def main(argv=None) -> int:
         else:
             suffix = "_fake"  # never report fake numbers as LLM accuracy
         llm = get_llm(provider, allow_paid=args.yes)
-    out = run(args.mode, args.unseen, llm=llm)
+    out = run(args.mode, args.unseen, llm=llm, truth_csv=Path(args.truth) if args.truth else None)
+    out["summary"]["truth"] = args.truth or "generator ground truth"
     for r in out["columns"]:
         flag = "OK " if r["correct"] else "BAD"
         print(f"{flag} {r['table']:18} {r['column']:28} truth={r['truth']:18} got={r['predicted']:18} {r['method']}")
     print(out["summary"])
-    name = f"mapping_{args.mode}{suffix}{'_unseen' if args.unseen else ''}"
+    name = f"mapping_{args.mode}{suffix}{'_unseen' if args.unseen else ''}{'_handlabeled' if args.truth else ''}"
     print("saved", save(name, {"command": "uv run python " + " ".join(sys.argv), **out}))
     return 0
 

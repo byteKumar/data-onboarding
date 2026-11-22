@@ -14,8 +14,11 @@ ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "eval" / "results"
 
 
-def truth_mapping(gt_dir: Path) -> dict[tuple[str, str], str]:
-    df = pd.read_csv(gt_dir / "column_mapping.csv")
+def truth_mapping(gt_dir: Path, csv: Path | None = None) -> dict[tuple[str, str], str]:
+    df = pd.read_csv(csv or gt_dir / "column_mapping.csv")
+    if df["target_field"].isna().any():
+        missing = df[df["target_field"].isna()]["column"].tolist()
+        raise SystemExit(f"{csv}: target_field is blank for {missing}; label every column first")
     return {(f"{r.source}.{r.table}", r.column): r.target_field for r in df.itertuples()}
 
 
